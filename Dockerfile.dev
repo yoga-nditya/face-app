@@ -1,0 +1,24 @@
+# Dockerfile.dev
+# Dipakai untuk development lewat docker-compose (live-reload, kode di-mount
+# sebagai volume, bukan di-copy ke image). Untuk build production, pakai
+# Dockerfile biasa (kode ikut di-copy, tidak butuh bind mount).
+FROM mirror.gcr.io/library/python:3.11-slim
+
+# Dependensi sistem untuk dlib/opencv (build-essential+cmake dibutuhkan kalau
+# wheel prebuilt seperti dlib-bin tidak cocok dengan platform kamu).
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential cmake \
+    libopenblas-dev liblapack-dev \
+    libgl1 libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Hanya copy requirements dulu supaya layer pip install ke-cache selama
+# requirements.txt tidak berubah (kode aplikasi di-mount lewat volume di compose).
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
