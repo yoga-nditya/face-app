@@ -4,9 +4,7 @@ python-multipart==0.0.17
 pydantic==2.9.2
 pydantic-settings==2.6.1
 
-# Face detection & embedding.
-# dlib compile bisa lama; disarankan pakai wheel prebuilt (dlib-bin) di Linux/CPU.
-dlib-bin==19.24.6 ; sys_platform == "linux"
+dlib==19.24.6
 face_recognition==1.3.0
 face_recognition_models==0.3.0
 opencv-python-headless==4.10.0.84
@@ -15,4 +13,3 @@ numpy==1.26.4
 pytest==8.3.3
 httpx==0.27.2
 gunicorn==23.0.0
-
